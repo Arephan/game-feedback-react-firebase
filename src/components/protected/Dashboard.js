@@ -1,12 +1,20 @@
-import React, { Component } from 'react'
-import Stars from 'simple-rating-stars';
+import React, { Component } from 'react';
+import { base } from '../../config/constants';
 
 export default class Dashboard extends Component {
   constructor(props) {
     super(props);
-    this.state = { comment: "", stars: 0 };
+    this.state = { comment: "", stars: 0, games: [], game: "" };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  componentDidMount() {
+    base.syncState(`games`, {
+      context: this,
+      state: 'games',
+      asArray: true
+    });
   }
 
   handleChange(event) {
@@ -14,7 +22,7 @@ export default class Dashboard extends Component {
   }
 
   handleSubmit(event) {
-    alert('A comment was submitted: ' + this.state.comment + ' Stars: ' + this.state.stars);
+    alert('A comment was submitted: ' + this.state.comment + ' Stars: ' + this.state.stars + "games: " + this.state.games);
     event.preventDefault();
   }
 
@@ -43,11 +51,8 @@ export default class Dashboard extends Component {
         <br />
         <label>
           Game:
-          <select name="Icecream Flavours">
-            <option value="double chocolate">Double Chocolate</option>
-            <option value="vanilla">Vanilla</option>
-            <option value="strawberry">Strawberry</option>
-            <option value="caramel">Caramel</option>
+          <select name="Icecream Flavours" onChange={this.handleChange}>
+            {this.state.games.map((game, index) => <option key={index}>{game.gameName}</option>)}
           </select>
         </label>
         <input type="submit" value="Submit" />
