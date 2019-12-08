@@ -1,19 +1,23 @@
 import React, { Component } from 'react';
 import { base, firebaseAuth } from '../../config/constants';
-import { Redirect } from 'react-router-dom'
 
 export default class Dashboard extends Component {
   constructor(props) {
     super(props);
-    this.state = { comment: "", stars: 0, games: [], game: "" };
+    this.state = { comment: "", stars: 0, games: [], game: "", feedbacks: [] };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   componentDidMount() {
-    base.syncState(`games`, {
+    base.bindToState(`games`, {
       context: this,
       state: 'games',
+      asArray: true
+    });
+    base.bindToState(`feedbacks`, {
+      context: this,
+      state: 'feedbacks',
       asArray: true
     });
   }
@@ -23,15 +27,28 @@ export default class Dashboard extends Component {
   }
 
   handleSubmit() {
-    // alert('A comment was submitted: ' + this.state.comment + ' Stars: ' + this.state.stars + "games: " + this.state.game);
-    base.push('feedbacks', {
-      data: {
-        email: firebaseAuth().currentUser.email,
-        comment: this.state.comment, 
-        stars: this.state.stars,
-        game: this.state.game
-    }})
+    let now = Date.now()
+    let userFeedBackForGameInPastTenMin = this.state.feedbacks.filter(feedback => {
+      return feedback.email === firebaseAuth().currentUser.email &&
+        feedback.game === this.state.game &&
+        (now - feedback.timeStamp) < 6000000  // 600000 miliseconds = 10minutes
+    })
+
+    if (userFeedBackForGameInPastTenMin.length === 0) {
+      base.push('feedbacks', {
+        data: {
+          email: firebaseAuth().currentUser.email,
+          comment: this.state.comment,
+          stars: this.state.stars,
+          game: this.state.game,
+          timeStamp: Date.now()
+        }
+      })
+    } else {
+      alert("Only one feedback per game session!")
+    }
   }
+
 
   render() {
     return (
@@ -60,7 +77,7 @@ export default class Dashboard extends Component {
           Game:
           <select required name="game" value={this.state.game} onChange={this.handleChange}>
             <option name="game" value="">Please select</option>
-            {this.state.games.map((game) => <option name="game" value={game.gameName}>{game.gameName}</option>)}
+            {this.state.games.map((game, i) => <option key={i} name="game" value={game.gameName}>{game.gameName}</option>)}
           </select>
         </label>
         <input type="submit" value="Submit" />
