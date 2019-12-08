@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { base } from '../../config/constants';
+import { base, firebaseAuth } from '../../config/constants';
+import { Redirect } from 'react-router-dom'
 
 export default class Dashboard extends Component {
   constructor(props) {
@@ -21,9 +22,15 @@ export default class Dashboard extends Component {
     this.setState({ [event.target.name]: event.target.value });
   }
 
-  handleSubmit(event) {
-    alert('A comment was submitted: ' + this.state.comment + ' Stars: ' + this.state.stars + "games: " + this.state.game);
-    event.preventDefault();
+  handleSubmit() {
+    // alert('A comment was submitted: ' + this.state.comment + ' Stars: ' + this.state.stars + "games: " + this.state.game);
+    base.push('feedbacks', {
+      data: {
+        email: firebaseAuth().currentUser.email,
+        comment: this.state.comment, 
+        stars: this.state.stars,
+        game: this.state.game
+    }})
   }
 
   render() {
