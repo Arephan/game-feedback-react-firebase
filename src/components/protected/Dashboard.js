@@ -30,6 +30,10 @@ export default class Dashboard extends Component {
     }, {
       Header: 'Stars', // Custom header components!
       accessor: 'stars'
+    },
+    {
+      Header: 'Date Time',
+      accessor: 'dateTime'
     }]
 
     return <ReactTable

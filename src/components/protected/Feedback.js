@@ -41,7 +41,8 @@ export default class Feedback extends Component {
           comment: this.state.comment,
           stars: this.state.stars,
           game: this.state.game,
-          timeStamp: Date.now()
+          timeStamp: Date.now(),
+          dateTime: new Date().toLocaleString()
         }
       })
     } else {
