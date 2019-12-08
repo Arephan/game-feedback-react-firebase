@@ -22,7 +22,7 @@ export default class Dashboard extends Component {
   }
 
   handleSubmit(event) {
-    alert('A comment was submitted: ' + this.state.comment + ' Stars: ' + this.state.stars + "games: " + this.state.games);
+    alert('A comment was submitted: ' + this.state.comment + ' Stars: ' + this.state.stars + "games: " + this.state.game);
     event.preventDefault();
   }
 
@@ -51,8 +51,9 @@ export default class Dashboard extends Component {
         <br />
         <label>
           Game:
-          <select name="Icecream Flavours" onChange={this.handleChange}>
-            {this.state.games.map((game, index) => <option key={index}>{game.gameName}</option>)}
+          <select required name="game" value={this.state.game} onChange={this.handleChange}>
+            <option name="game" value="">Please select</option>
+            {this.state.games.map((game) => <option name="game" value={game.gameName}>{game.gameName}</option>)}
           </select>
         </label>
         <input type="submit" value="Submit" />
