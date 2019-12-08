@@ -13,6 +13,7 @@
     "react": "^15.4.0",
     "react-dom": "^15.4.0",
     "react-router-dom": "^4.0.0-beta.8",
+    "react-table-v6": "^6.8.6",
     "simple-rating-stars": "^1.4.0"
   },
   "scripts": {
